@@ -5,12 +5,16 @@ import { Button } from "./components/Button";
 import SearchBar from "./components/SearchBar";
 import Spinner from "./components/Spinner";
 import MainCard from "./components/card/MainCard";
+import LineChartComponent from "./components/charts/LineChart";
 import { SearchWeather, SearchWeatherForecast } from "./utils/ApiCalls";
+import { ConvertToChartData } from "./utils/functions";
+import { ChartDataType } from "./utils/interface";
 
 function App() {
   const [searchParams, setSearchParams] = useState<string>("");
   const [data, setData] = useState<any>();
   const [forecastData, setForecastData] = useState<any>();
+  const [chartData, setChartData] = useState<ChartDataType[]>();
 
   const showErrorToast = () => toast.error("Couldn't find the city!");
 
@@ -34,7 +38,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(forecastData);
+    // console.log(forecastData);
+    if (forecastData) ConvertToChartData(forecastData, setChartData);
   }, [forecastData]);
 
   return (
@@ -45,12 +50,15 @@ function App() {
         </div>
         <Button title="Search" onClick={SearchWeatherData} />
       </div>
-      <div className="flex justify-center mt-10">
+      <div className="flex justify-center mt-10 w-full">
         {!data ? (
           <Spinner />
         ) : (
           // Main Card
-          <MainCard data={data} />
+          <div className="flex w-full space-x-4">
+            <MainCard data={data} />
+            <LineChartComponent />
+          </div>
         )}
       </div>
       <ToastContainer />
