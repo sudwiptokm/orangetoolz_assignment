@@ -1,5 +1,5 @@
 import { ArrowLongDownIcon } from "@heroicons/react/20/solid";
-import { capitalizeSentence } from "../../utils/functions";
+import { CapitalizeSentence } from "../../utils/functions";
 import CurrentDateAndTime from "../CurrentDateAndTime";
 
 type Props = {
@@ -11,7 +11,7 @@ const MainCard = ({ data }: Props) => {
     <div className="p-4 relative mb-10">
       {/* Current Time and Date */}
       <div>
-        <CurrentDateAndTime />
+        <CurrentDateAndTime offset={data.timezone} />
       </div>
 
       {/* City Name */}
@@ -34,7 +34,7 @@ const MainCard = ({ data }: Props) => {
       <div>
         <p className="font-semibold text-lg">
           Feels like {Math.round(data.main.temp)}°C. {data.weather[0].main}.{" "}
-          {capitalizeSentence(data.weather[0].description)}
+          {CapitalizeSentence(data.weather[0].description)}
         </p>
       </div>
 
