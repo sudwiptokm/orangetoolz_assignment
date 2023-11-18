@@ -18,25 +18,39 @@ function App() {
   const [chartData, setChartData] = useState<ChartDataType[]>();
   const [filteredForecastData, setFilteredForecastData] =
     useState<ForeCastDataType[]>();
+  const [isLoading1, setIsLoading1] = useState<boolean>(true);
+  const [isLoading2, setIsLoading2] = useState<boolean>(true);
 
   const showErrorToast = () => toast.error("Couldn't find the city!");
 
   const SearchWeatherData = () => {
-    SearchWeather({ searchParams, setData, showErrorToast });
+    setIsLoading1(true);
+    setIsLoading2(true);
+    SearchWeather({
+      searchParams,
+      setData,
+      showErrorToast,
+      setIsLoading: setIsLoading1,
+    });
     SearchWeatherForecast({
       searchParams,
       setData: setForecastData,
-      showErrorToast,
+      setIsLoading: setIsLoading2,
     });
     setSearchParams("");
   };
 
   useEffect(() => {
-    SearchWeather({ searchParams: "Dhaka", setData, showErrorToast });
+    SearchWeather({
+      searchParams: "Dhaka",
+      setData,
+      showErrorToast,
+      setIsLoading: setIsLoading1,
+    });
     SearchWeatherForecast({
       searchParams: "Dhaka",
       setData: setForecastData,
-      showErrorToast,
+      setIsLoading: setIsLoading2,
     });
   }, []);
 
@@ -57,7 +71,7 @@ function App() {
         <Button title="Search" onClick={SearchWeatherData} />
       </div>
       <div className="flex justify-center mt-10">
-        {!data ? (
+        {isLoading1 ? (
           <Spinner />
         ) : (
           // Main Card
@@ -69,11 +83,23 @@ function App() {
 
       {/* Line Chart */}
       <div className="">
-        <LineChartComponent data={chartData!} />
+        {isLoading2 ? (
+          <div className="flex justify-center my-40">
+            <Spinner />
+          </div>
+        ) : (
+          <LineChartComponent data={chartData!} />
+        )}
       </div>
 
       {/* Forecast Data */}
-      <ForecastDataCard data={filteredForecastData!} />
+      {isLoading2 ? (
+        <div className="flex justify-center my-40">
+          <Spinner />
+        </div>
+      ) : (
+        <ForecastDataCard data={filteredForecastData!} />
+      )}
       <ToastContainer />
     </div>
   );
