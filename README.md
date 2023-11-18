@@ -1,7 +1,4 @@
-
-
-
-
+## Env file is added, so you can run the project without any configuration
 
 ## Available Scripts
 
